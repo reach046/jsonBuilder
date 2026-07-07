@@ -483,7 +483,7 @@ const authSignupBtn = document.getElementById('auth-signup-btn');
 const authError = document.getElementById('auth-error');
 const logoutBtn = document.getElementById('logout-btn');
 
-const DUMMY_DOMAIN = '@jsonbuilder.local';
+const DUMMY_DOMAIN = '@jsonbuilder.com';
 
 // Check existing session on load
 async function checkSession() {
