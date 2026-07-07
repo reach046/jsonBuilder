@@ -74,7 +74,7 @@ body {
 
 /* --- Left Sidebar (Structure) --- */
 .sidebar-left {
-    width: 380px;
+    width: 600px;
     flex-shrink: 0;
     background-color: #fff;
     border-right: 1px solid var(--border-color);
@@ -266,9 +266,6 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     z-index: 2;
     text-align: left;
     white-space: nowrap;
-}
-
-.minimal-table th {
     position: relative; /* required for absolute resizer */
 }
 
@@ -281,7 +278,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     cursor: col-resize;
     user-select: none;
     z-index: 10;
-    transition: background-color 0.2s;
+    transition: background-color: 0.2s;
 }
 
 .col-resizer:hover,
@@ -305,6 +302,12 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
 .data-table {
     width: max-content;
     min-width: 100%;
+}
+
+.filler-col {
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
 }
 
 .data-table th, .data-table td {

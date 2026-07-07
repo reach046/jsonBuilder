@@ -159,11 +159,19 @@ function renderTable() {
     }
 
     const trHead = document.createElement('tr');
-    trHead.innerHTML = `<th>#</th>`;
+    trHead.innerHTML = `<th style="width: 60px;">#</th>`;
     schema.forEach(prop => {
-        trHead.innerHTML += `<th>${prop.name}</th>`;
+        let colWidth = 150;
+        if (prop.type === 'number') colWidth = 100;
+        else if (prop.type === 'boolean') colWidth = 80;
+        else if (prop.type === 'string') colWidth = 200;
+        else if (prop.type === 'array-object' || prop.type === 'object') colWidth = 350;
+        else if (prop.type.startsWith('array-')) colWidth = 250;
+        
+        trHead.innerHTML += `<th style="width: ${colWidth}px;">${prop.name}</th>`;
     });
-    trHead.innerHTML += `<th class="text-right">작업</th>`;
+    trHead.innerHTML += `<th class="filler-col"></th>`;
+    trHead.innerHTML += `<th class="text-right" style="width: 100px;">작업</th>`;
     dataThead.appendChild(trHead);
 
     dataTbody.innerHTML = '';
@@ -348,6 +356,10 @@ function renderTable() {
             trBody.appendChild(td);
         });
 
+        const tdFiller = document.createElement('td');
+        tdFiller.className = 'filler-col';
+        trBody.appendChild(tdFiller);
+
         const tdActions = document.createElement('td');
         tdActions.className = 'text-right';
         tdActions.innerHTML = `
@@ -358,12 +370,12 @@ function renderTable() {
 
         dataTbody.appendChild(trBody);
     });
-    
+
     initColumnResizers();
 }
 
 function initColumnResizers() {
-    const cols = dataThead.querySelectorAll('th');
+    const cols = dataThead.querySelectorAll('th:not(.filler-col)');
     cols.forEach(col => {
         const resizer = document.createElement('div');
         resizer.className = 'col-resizer';
@@ -377,9 +389,17 @@ function createColResizable(col, resizer) {
     let w = 0;
     
     const mouseDownHandler = function(e) {
+        // 드래그 시작 시, 모든 th의 현재 너비를 min-width+max-width로 완전 고정
+        const allCols = dataThead.querySelectorAll('th');
+        allCols.forEach(c => {
+            const cw = window.getComputedStyle(c).width;
+            c.style.width = cw;
+            c.style.minWidth = cw;
+            c.style.maxWidth = cw;
+        });
+
         x = e.clientX;
-        const styles = window.getComputedStyle(col);
-        w = parseInt(styles.width, 10);
+        w = parseInt(window.getComputedStyle(col).width, 10);
 
         document.addEventListener('mousemove', mouseMoveHandler);
         document.addEventListener('mouseup', mouseUpHandler);
@@ -388,8 +408,10 @@ function createColResizable(col, resizer) {
 
     const mouseMoveHandler = function(e) {
         const dx = e.clientX - x;
-        col.style.width = `${w + dx}px`;
-        col.style.minWidth = `${w + dx}px`;
+        const newW = Math.max(60, w + dx) + 'px';
+        col.style.width = newW;
+        col.style.minWidth = newW;
+        col.style.maxWidth = newW;
     };
 
     const mouseUpHandler = function() {
