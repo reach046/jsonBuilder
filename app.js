@@ -465,7 +465,7 @@ document.addEventListener('mouseup', () => {
 // --- Supabase Cloud Integration ---
 const SUPABASE_URL = 'https://bslzltjpllptynhadceh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzbHpsdGpwbGxwdHluaGFkY2VoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0MzM5ODAsImV4cCI6MjA5OTAwOTk4MH0.Lw18UtgFlZeeqFSnIlOYDlOCt3CeWZeIgFzHzq99Dso';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const cloudSaveBtn = document.getElementById('cloud-save-btn');
 const cloudLoadBtn = document.getElementById('cloud-load-btn');
@@ -486,7 +486,7 @@ cloudSaveBtn.addEventListener('click', async () => {
     cloudSaveBtn.disabled = true;
 
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('game_data_projects')
             .insert([
                 { 
@@ -520,7 +520,7 @@ async function fetchProjects() {
     projectListBody.innerHTML = '<tr><td colspan="3">불러오는 중...</td></tr>';
     
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('game_data_projects')
             .select('*')
             .order('created_at', { ascending: false });
@@ -586,7 +586,7 @@ async function deleteProject(id) {
     if(!confirm('정말 이 프로젝트를 삭제하시겠습니까? (복구 불가)')) return;
     
     try {
-        const { error } = await supabase
+        const { error } = await supabaseClient
             .from('game_data_projects')
             .delete()
             .eq('id', id);
