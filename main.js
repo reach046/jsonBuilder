@@ -24,7 +24,7 @@ const exportZipBtn = document.getElementById('export-zip-btn');
 
 // --- UI Events ---
 propTypeSelect.addEventListener('change', (e) => {
-    if (e.target.value === 'array-object') {
+    if (e.target.value === 'array-object' || e.target.value === 'object') {
         subschemaBuilder.style.display = 'block';
         if (subschemaList.children.length === 0) {
             createSubpropItem(); // add at least one
@@ -67,7 +67,7 @@ function addProperty() {
     }
 
     let subSchema = null;
-    if (type === 'array-object') {
+    if (type === 'array-object' || type === 'object') {
         const items = subschemaList.querySelectorAll('.sub-prop-item');
         if (items.length === 0) {
             alert('최소 1개의 하위 속성을 정의해야 합니다.');
@@ -130,7 +130,11 @@ function renderSchema() {
         if(prop.type === 'array-number') typeLabel = '숫자 배열 (1, 2)';
         if(prop.type === 'array-object') {
             const subStr = prop.subSchema.map(s => `${s.name}:${s.type}`).join(', ');
-            typeLabel = `객체 배열 <br><span style="font-size:0.8rem;color:var(--text-muted)">{${subStr}}</span>`;
+            typeLabel = `객체 배열 <br><span style="font-size:0.8rem;color:var(--text-muted)">[{${subStr}}]</span>`;
+        }
+        if(prop.type === 'object') {
+            const subStr = prop.subSchema.map(s => `${s.name}:${s.type}`).join(', ');
+            typeLabel = `단일 객체 <br><span style="font-size:0.8rem;color:var(--text-muted)">{${subStr}}</span>`;
         }
 
         tr.innerHTML = `
@@ -284,6 +288,52 @@ function renderTable() {
                 };
                 td.appendChild(input);
                 if(row[prop.name] === undefined) row[prop.name] = [];
+            } else if (prop.type === 'object') {
+                if (row[prop.name] === undefined) {
+                    row[prop.name] = {};
+                    prop.subSchema.forEach(sp => {
+                        if(sp.type === 'boolean') row[prop.name][sp.name] = false;
+                        else if(sp.type === 'number') row[prop.name][sp.name] = 0;
+                        else row[prop.name][sp.name] = '';
+                    });
+                }
+                
+                const container = document.createElement('div');
+                container.style.border = '1px solid var(--border-color)';
+                container.style.padding = '8px';
+                container.style.borderRadius = 'var(--radius)';
+                
+                prop.subSchema.forEach(sp => {
+                    const div = document.createElement('div');
+                    div.style.marginBottom = '6px';
+                    const lbl = document.createElement('label');
+                    lbl.textContent = sp.name;
+                    lbl.style.fontSize = '0.8rem';
+                    lbl.style.display = 'inline-block';
+                    lbl.style.width = '70px';
+                    div.appendChild(lbl);
+                    
+                    if (sp.type === 'boolean') {
+                        const cb = document.createElement('input');
+                        cb.type = 'checkbox';
+                        cb.checked = row[prop.name][sp.name];
+                        cb.onchange = (e) => { row[prop.name][sp.name] = e.target.checked; };
+                        div.appendChild(cb);
+                    } else {
+                        const input = document.createElement('input');
+                        input.type = sp.type === 'number' ? 'number' : 'text';
+                        input.value = row[prop.name][sp.name];
+                        input.style.width = 'calc(100% - 75px)';
+                        input.oninput = (e) => {
+                            let val = e.target.value;
+                            if(sp.type === 'number') val = val === '' ? '' : Number(val);
+                            row[prop.name][sp.name] = val;
+                        };
+                        div.appendChild(input);
+                    }
+                    container.appendChild(div);
+                });
+                td.appendChild(container);
             } else {
                 const input = document.createElement('input');
                 input.type = prop.type === 'number' ? 'number' : 'text';
@@ -325,6 +375,14 @@ function addRow() {
         else if(prop.type === 'string') newRow[prop.name] = '';
         else if(prop.type === 'number') newRow[prop.name] = 0;
         else if(prop.type.startsWith('array')) newRow[prop.name] = [];
+        else if(prop.type === 'object') {
+            newRow[prop.name] = {};
+            prop.subSchema.forEach(sp => {
+                if(sp.type === 'boolean') newRow[prop.name][sp.name] = false;
+                else if(sp.type === 'number') newRow[prop.name][sp.name] = 0;
+                else newRow[prop.name][sp.name] = '';
+            });
+        }
     });
     tableData.push(newRow);
     renderTable();
