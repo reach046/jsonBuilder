@@ -161,7 +161,7 @@ function renderTable() {
     const trHead = document.createElement('tr');
     trHead.innerHTML = `<th>#</th>`;
     schema.forEach(prop => {
-        trHead.innerHTML += `<th><div class="resizable-header">${prop.name}</div></th>`;
+        trHead.innerHTML += `<th>${prop.name}</th>`;
     });
     trHead.innerHTML += `<th class="text-right">작업</th>`;
     dataThead.appendChild(trHead);
@@ -358,6 +358,47 @@ function renderTable() {
 
         dataTbody.appendChild(trBody);
     });
+    
+    initColumnResizers();
+}
+
+function initColumnResizers() {
+    const cols = dataThead.querySelectorAll('th');
+    cols.forEach(col => {
+        const resizer = document.createElement('div');
+        resizer.className = 'col-resizer';
+        col.appendChild(resizer);
+        createColResizable(col, resizer);
+    });
+}
+
+function createColResizable(col, resizer) {
+    let x = 0;
+    let w = 0;
+    
+    const mouseDownHandler = function(e) {
+        x = e.clientX;
+        const styles = window.getComputedStyle(col);
+        w = parseInt(styles.width, 10);
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+        resizer.classList.add('resizing');
+    };
+
+    const mouseMoveHandler = function(e) {
+        const dx = e.clientX - x;
+        col.style.width = `${w + dx}px`;
+        col.style.minWidth = `${w + dx}px`;
+    };
+
+    const mouseUpHandler = function() {
+        resizer.classList.remove('resizing');
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.removeEventListener('mouseup', mouseUpHandler);
+    };
+
+    resizer.addEventListener('mousedown', mouseDownHandler);
 }
 
 function updateData(rowIndex, propName, value) {
