@@ -1,0 +1,517 @@
+/* style.css */
+:root {
+    --primary-color: #0066ff;
+    --primary-hover: #0052cc;
+    --danger-color: #ff3b30;
+    --danger-hover: #d63027;
+    --bg-color: #f9fafc;
+    --card-bg: #ffffff;
+    --text-main: #1d1d1f;
+    --text-muted: #86868b;
+    --border-color: #e5e5ea;
+    --input-bg: #f5f5f7;
+    --radius: 8px;
+    --transition: all 0.2s ease-in-out;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden; /* Full-screen layout prevents body scrolling */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* --- App Layout --- */
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* --- Topbar --- */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 24px;
+    background-color: #fff;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+    z-index: 10;
+}
+
+.brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+}
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+/* --- Main Workspace --- */
+.main-workspace {
+    display: flex;
+    flex: 1;
+    overflow: hidden; /* Prevent workspace itself from scrolling, let children scroll */
+}
+
+/* --- Left Sidebar (Structure) --- */
+.sidebar-left {
+    width: 380px;
+    flex-shrink: 0;
+    background-color: #fff;
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto; /* Scrollable sidebar */
+}
+
+.sidebar-left .card {
+    border: none;
+    box-shadow: none;
+    padding: 24px;
+    margin-bottom: 0;
+}
+
+/* --- Right Content (Data) --- */
+.content-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    background-color: var(--bg-color);
+    overflow: hidden;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--border-color);
+}
+
+.card.flex-col {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-bottom: 0;
+    padding: 24px;
+}
+
+.section-header {
+    margin-bottom: 16px;
+}
+
+.section-header.row-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.section-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* --- Inputs & Buttons --- */
+.input-group {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.input-group.mini {
+    margin-bottom: 0;
+}
+
+.input-group.mini label {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+input[type="text"], input[type="number"], select {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background-color: var(--input-bg);
+    font-size: 0.9rem;
+    font-family: inherit;
+    color: var(--text-main);
+    transition: var(--transition);
+}
+
+input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+    background-color: #fff;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn.primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn.primary:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn.secondary {
+    background-color: var(--input-bg);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+.btn.secondary:hover {
+    background-color: #e5e5ea;
+}
+
+.btn.danger {
+    background-color: transparent;
+    color: var(--danger-color);
+    border: 1px solid var(--danger-color);
+}
+
+.btn.danger:hover {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn.small {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
+
+.btn.large {
+    padding: 14px 28px;
+    font-size: 1rem;
+}
+
+.action-bar-top {
+    display: flex;
+    gap: 8px;
+}
+
+/* --- Tables --- */
+.scrollable-area {
+    flex: 1;
+    overflow: auto;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    background-color: #fff;
+}
+
+.minimal-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.minimal-table th, .minimal-table td {
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: top;
+}
+
+.minimal-table th {
+    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: var(--bg-color);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.minimal-table tbody tr {
+    transition: var(--transition);
+}
+
+.minimal-table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.01);
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.data-table th, .data-table td {
+    white-space: nowrap;
+}
+
+/* Allow inputs inside table to grow but have minimum width */
+.data-table input[type="text"], .data-table input[type="number"], .data-table select {
+    width: 100%;
+    min-width: 120px;
+    padding: 8px 12px;
+    margin: 0;
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+
+.data-table input[type="text"]:hover, .data-table input[type="number"]:hover, .data-table input:focus {
+    background-color: #fff;
+    border-color: var(--primary-color);
+}
+
+.download-item-btn {
+    padding: 4px 8px;
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-left: 8px;
+    transition: var(--transition);
+}
+
+.download-item-btn:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* --- Subschema Builder --- */
+.subschema-builder {
+    background-color: var(--bg-color);
+    border: 1px dashed var(--border-color);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.subschema-header h4 {
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: var(--text-main);
+}
+
+.sub-prop-item {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.sub-prop-item input {
+    flex: 2;
+    min-width: 0;
+}
+
+.sub-prop-item select {
+    flex: 1;
+    min-width: 0;
+}
+
+/* --- Custom Checkbox --- */
+.custom-checkbox {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    padding-top: 6px;
+}
+
+.custom-checkbox input {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+/* --- Nested Table for Array of Objects --- */
+.nested-table-container {
+    background-color: #fcfcfd;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 12px;
+    min-width: 250px;
+}
+
+.nested-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+}
+
+.nested-table th, .nested-table td {
+    padding: 8px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.85rem;
+}
+
+.nested-table th {
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 500;
+    background-color: #f5f5f7;
+    position: static; /* override sticky from minimal-table */
+}
+
+.nested-table tr:last-child td {
+    border-bottom: none;
+}
+
+.nested-table input[type="text"], .nested-table input[type="number"] {
+    width: 100%;
+    min-width: 80px;
+    padding: 6px;
+    font-size: 0.85rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.nested-table input[type="text"]:focus, .nested-table input[type="number"]:focus {
+    background-color: #fff;
+}
+
+/* --- Resizer --- */
+.resizer {
+    width: 6px;
+    background-color: transparent;
+    cursor: col-resize;
+    flex-shrink: 0;
+    transition: background-color 0.2s;
+    z-index: 5;
+    position: relative;
+}
+
+.resizer::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 2px; right: 2px;
+    background-color: var(--border-color);
+    transition: background-color 0.2s;
+}
+
+.resizer:hover::after, .resizer:active::after {
+    background-color: var(--primary-color);
+}
+
+/* --- Responsive (Mobile) --- */
+@media (max-width: 768px) {
+    .main-workspace {
+        flex-direction: column;
+    }
+    .sidebar-left {
+        width: 100% !important;
+        height: 50%;
+        border-right: none;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .resizer {
+        display: none; /* Disable manual drag resizing on mobile */
+    }
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}
+
+/* --- Modal --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+    align-items: center;
+    justify-content: center;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    border-radius: var(--radius);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.modal-header .btn {
+    font-size: 1.5rem;
+    padding: 0 8px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+}
+
+.modal-header .btn:hover {
+    color: var(--text-main);
+}
+
+.modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk JSON Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- JSZip for zip file generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="app-layout">
+        <!-- 상단바 -->
+        <header class="topbar">
+            <div class="brand">JSON Builder</div>
+            <div class="topbar-actions">
+                <button id="cloud-load-btn" class="btn secondary">클라우드 불러오기</button>
+                <button id="cloud-save-btn" class="btn primary">클라우드 저장</button>
+                
+                <div class="input-group mini" style="margin-left: 16px; border-left: 1px solid var(--border-color); padding-left: 16px;">
+                    <label for="file-extension">확장자:</label>
+                    <input type="text" id="file-extension" value=".json" placeholder=".json">
+                </div>
+                <button id="export-zip-btn" class="btn secondary">압축 다운로드 (.zip)</button>
+            </div>
+        </header>
+
+        <!-- 메인 워크스페이스 (좌우 분할) -->
+        <div class="main-workspace">
+            
+            <!-- 좌측 패널: 데이터 구조 정의 -->
+            <aside class="sidebar-left">
+                <section class="card full-height" id="structure-section">
+                    <div class="section-header">
+                        <h2>데이터 구조 정의</h2>
+                        <p class="subtitle">첫 번째 속성이 파일명 기준이 됩니다.</p>
+                    </div>
+                    
+                    <div class="input-group new-property-group">
+                        <input type="text" id="prop-name" placeholder="속성명 (예: id, name)" autocomplete="off">
+                        <select id="prop-type">
+                            <option value="string">문자열 (String)</option>
+                            <option value="number">숫자 (Number)</option>
+                            <option value="boolean">참/거짓 (Boolean)</option>
+                            <option value="array-string">문자열 배열 (A, B)</option>
+                            <option value="array-number">숫자 배열 (1, 2)</option>
+                            <option value="array-object">객체 배열 (Array of Objects)</option>
+                        </select>
+                        <button id="add-prop-btn" class="btn primary">추가</button>
+                    </div>
+
+                    <div id="subschema-builder" class="subschema-builder" style="display:none;">
+                        <div class="subschema-header">
+                            <h4>객체 배열 하위 속성</h4>
+                        </div>
+                        <div id="subschema-list">
+                            <!-- JS populated -->
+                        </div>
+                        <button id="add-subprop-btn" class="btn secondary small" style="margin-top: 10px;">+ 하위 속성 추가</button>
+                    </div>
+
+                    <div class="properties-list">
+                        <table class="minimal-table" id="schema-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>속성명</th>
+                                    <th>타입</th>
+                                    <th class="text-right">작업</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schema-body">
+                                <!-- JS populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </aside>
+
+            <!-- 패널 크기 조절 핸들 -->
+            <div class="resizer" id="sidebar-resizer"></div>
+
+            <!-- 우측 패널: 데이터 입력 -->
+            <main class="content-right">
+                <section class="card full-height flex-col" id="data-section">
+                    <div class="section-header row-between">
+                        <h2>데이터 표</h2>
+                        <div class="action-bar-top">
+                            <button id="add-row-btn" class="btn secondary">행 추가</button>
+                            <button id="clear-data-btn" class="btn danger">초기화</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container scrollable-area">
+                        <table class="data-table minimal-table" id="data-table">
+                            <thead id="data-thead">
+                                <!-- JS populated -->
+                                <tr>
+                                    <th>좌측에서 속성을 먼저 추가해주세요.</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data-tbody">
+                                <!-- JS populated -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Cloud Load Modal -->
+    <div id="cloud-modal" class="modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2>클라우드 프로젝트 불러오기</h2>
+                <button id="close-cloud-modal-btn" class="btn small">&times;</button>
+            </header>
+            <div class="modal-body">
+                <table class="minimal-table" id="project-list-table">
+                    <thead>
+                        <tr>
+                            <th>프로젝트 이름</th>
+                            <th>저장 일시</th>
+                            <th class="text-right">작업</th>
+                        </tr>
+                    </thead>
+                    <tbody id="project-list-body">
+                        <!-- JS populated -->
+                        <tr><td colspan="3">로딩 중...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
