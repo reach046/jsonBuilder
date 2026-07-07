@@ -161,7 +161,7 @@ function renderTable() {
     const trHead = document.createElement('tr');
     trHead.innerHTML = `<th>#</th>`;
     schema.forEach(prop => {
-        trHead.innerHTML += `<th>${prop.name}</th>`;
+        trHead.innerHTML += `<th><div class="resizable-header">${prop.name}</div></th>`;
     });
     trHead.innerHTML += `<th class="text-right">작업</th>`;
     dataThead.appendChild(trHead);
