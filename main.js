@@ -474,6 +474,84 @@ const SUPABASE_URL = 'https://bslzltjpllptynhadceh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJzbHpsdGpwbGxwdHluaGFkY2VoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0MzM5ODAsImV4cCI6MjA5OTAwOTk4MH0.Lw18UtgFlZeeqFSnIlOYDlOCt3CeWZeIgFzHzq99Dso';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+// --- Auth UI Logic ---
+const authOverlay = document.getElementById('auth-overlay');
+const authIdInput = document.getElementById('auth-id');
+const authPasswordInput = document.getElementById('auth-password');
+const authLoginBtn = document.getElementById('auth-login-btn');
+const authSignupBtn = document.getElementById('auth-signup-btn');
+const authError = document.getElementById('auth-error');
+const logoutBtn = document.getElementById('logout-btn');
+
+const DUMMY_DOMAIN = '@jsonbuilder.local';
+
+// Check existing session on load
+async function checkSession() {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (session) {
+        authOverlay.classList.add('hidden');
+    } else {
+        authOverlay.classList.remove('hidden');
+    }
+}
+checkSession();
+
+async function handleAuth(action) {
+    const id = authIdInput.value.trim();
+    const password = authPasswordInput.value;
+    
+    if (!id || !password) {
+        authError.textContent = '아이디와 비밀번호를 모두 입력해주세요.';
+        return;
+    }
+    
+    const email = id + DUMMY_DOMAIN;
+    authError.textContent = '';
+    authLoginBtn.disabled = true;
+    authSignupBtn.disabled = true;
+
+    try {
+        let error = null;
+        if (action === 'signup') {
+            const res = await supabaseClient.auth.signUp({ email, password });
+            error = res.error;
+        } else {
+            const res = await supabaseClient.auth.signInWithPassword({ email, password });
+            error = res.error;
+        }
+
+        if (error) throw error;
+        
+        // Success
+        authOverlay.classList.add('hidden');
+        authIdInput.value = '';
+        authPasswordInput.value = '';
+    } catch (err) {
+        console.error(err);
+        authError.textContent = (action === 'signup' ? '가입 실패: ' : '로그인 실패: ') + err.message;
+    } finally {
+        authLoginBtn.disabled = false;
+        authSignupBtn.disabled = false;
+    }
+}
+
+authLoginBtn.addEventListener('click', () => handleAuth('login'));
+authSignupBtn.addEventListener('click', () => handleAuth('signup'));
+
+authPasswordInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleAuth('login');
+});
+
+logoutBtn.addEventListener('click', async () => {
+    await supabaseClient.auth.signOut();
+    authOverlay.classList.remove('hidden');
+    // 초기화
+    schema = [];
+    tableData = [];
+    renderSchema();
+    renderTable();
+});
+
 const cloudSaveBtn = document.getElementById('cloud-save-btn');
 const cloudLoadBtn = document.getElementById('cloud-load-btn');
 const cloudModal = document.getElementById('cloud-modal');
