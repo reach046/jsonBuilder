@@ -360,7 +360,14 @@ function getFileNameForRow(row) {
 }
 
 function generateJSONContent(row) {
-    return JSON.stringify(row, null, 2);
+    // 스키마(구조)에 정의된 순서대로 새로운 객체를 만들어 순서를 강제합니다.
+    const orderedRow = {};
+    schema.forEach(prop => {
+        if (row[prop.name] !== undefined) {
+            orderedRow[prop.name] = row[prop.name];
+        }
+    });
+    return JSON.stringify(orderedRow, null, 2);
 }
 
 function downloadSingle(rowIndex) {
