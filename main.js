@@ -20,6 +20,7 @@ const clearDataBtn = document.getElementById('clear-data-btn');
 
 const fileExtensionInput = document.getElementById('file-extension');
 const exportZipBtn = document.getElementById('export-zip-btn');
+const themeToggleBtn = document.getElementById('theme-toggle-btn');
 
 
 // --- UI Events ---
@@ -556,6 +557,19 @@ exportZipBtn.addEventListener('click', exportZip);
 // Init
 renderSchema();
 renderTable();
+
+// Init Theme
+const savedTheme = localStorage.getItem('theme') || 'light';
+document.body.setAttribute('data-theme', savedTheme);
+
+if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+        const currentTheme = document.body.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.body.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+    });
+}
 
 // --- Resizer Logic ---
 const resizerElement = document.getElementById('sidebar-resizer');

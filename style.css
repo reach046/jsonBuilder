@@ -12,6 +12,21 @@
     --input-bg: #f5f5f7;
     --radius: 8px;
     --transition: all 0.2s ease-in-out;
+    --nested-bg: #fcfcfd;
+    --row-hover: rgba(0, 0, 0, 0.01);
+}
+
+[data-theme="dark"] {
+    --bg-color: #0b0f19;
+    --card-bg: #151d30;
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    --border-color: #1e293b;
+    --input-bg: #1e293b;
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --nested-bg: #0f172a;
+    --row-hover: rgba(255, 255, 255, 0.02);
 }
 
 * {
@@ -31,6 +46,11 @@ body {
     color: var(--text-main);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body, .topbar, .sidebar-left, .content-right, .card, input, select, .btn, .scrollable-area, .minimal-table th, .minimal-table td, .nested-table-container, .nested-table th, .nested-table td {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* --- App Layout --- */
@@ -46,7 +66,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 12px 24px;
-    background-color: #fff;
+    background-color: var(--card-bg);
     border-bottom: 1px solid var(--border-color);
     box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     z-index: 10;
@@ -76,7 +96,7 @@ body {
 .sidebar-left {
     width: 600px;
     flex-shrink: 0;
-    background-color: #fff;
+    background-color: var(--card-bg);
     border-right: 1px solid var(--border-color);
     overflow-y: auto; /* Scrollable sidebar */
 }
@@ -168,7 +188,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
-    background-color: #fff;
+    background-color: var(--card-bg);
 }
 
 .btn {
@@ -202,7 +222,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
 }
 
 .btn.secondary:hover {
-    background-color: #e5e5ea;
+    background-color: var(--border-color);
 }
 
 .btn.danger {
@@ -237,7 +257,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     overflow: auto;
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
-    background-color: #fff;
+    background-color: var(--card-bg);
 }
 
 .minimal-table {
@@ -292,7 +312,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
 }
 
 .minimal-table tbody tr:hover {
-    background-color: rgba(0, 0, 0, 0.01);
+    background-color: var(--row-hover);
 }
 
 .text-right {
@@ -323,7 +343,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
 }
 
 .data-table input[type="text"]:hover, .data-table input[type="number"]:hover, .data-table input:focus {
-    background-color: #fff;
+    background-color: var(--card-bg);
     border-color: var(--primary-color);
 }
 
@@ -398,7 +418,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
 
 /* --- Nested Table for Array of Objects --- */
 .nested-table-container {
-    background-color: #fcfcfd;
+    background-color: var(--nested-bg);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     padding: 12px;
@@ -409,7 +429,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 8px;
-    background-color: #fff;
+    background-color: var(--card-bg);
     border: 1px solid var(--border-color);
 }
 
@@ -423,7 +443,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
     text-align: left;
     color: var(--text-muted);
     font-weight: 500;
-    background-color: #f5f5f7;
+    background-color: var(--input-bg);
     position: static; /* override sticky from minimal-table */
 }
 
@@ -441,7 +461,7 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
 }
 
 .nested-table input[type="text"]:focus, .nested-table input[type="number"]:focus {
-    background-color: #fff;
+    background-color: var(--card-bg);
 }
 
 /* --- Resizer --- */
@@ -583,5 +603,37 @@ input[type="text"]:focus, input[type="number"]:focus, select:focus {
 .auth-card .subtitle {
     text-align: center;
     color: var(--text-muted);
+}
+
+/* --- Theme Toggle --- */
+.theme-toggle-btn {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.theme-toggle-btn:hover {
+    background-color: var(--border-color);
+}
+
+/* Theme Toggle Icons */
+[data-theme="dark"] #theme-toggle-dark-icon {
+    display: none;
+}
+[data-theme="dark"] #theme-toggle-light-icon {
+    display: block;
+}
+body:not([data-theme="dark"]) #theme-toggle-dark-icon {
+    display: block;
+}
+body:not([data-theme="dark"]) #theme-toggle-light-icon {
+    display: none;
 }
 
